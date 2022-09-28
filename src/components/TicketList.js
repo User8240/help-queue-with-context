@@ -1,9 +1,9 @@
 import React from "react";
 import Ticket from "./Ticket";
 import PropTypes from "prop-types";
+import { ThemeContext } from "../context/theme-context";
 
 function TicketList(props){
-
   return (
     <React.Fragment>
       <hr/>
@@ -17,7 +17,7 @@ function TicketList(props){
           key={ticket.id}/>
       )}
     </React.Fragment>
-  );
+  );  
 }
 
 TicketList.propTypes = {

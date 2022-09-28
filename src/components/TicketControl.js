@@ -3,6 +3,7 @@ import NewTicketForm from './NewTicketForm';
 import TicketList from './TicketList';
 import EditTicketForm from './EditTicketForm';
 import TicketDetail from './TicketDetail';
+import { ThemeContext } from "../context/theme-context";
 
 class TicketControl extends React.Component {
 
@@ -65,8 +66,27 @@ class TicketControl extends React.Component {
   }
 
   render(){
+    let theme = this.context;
+
+    if (!theme) {
+      throw new Error("ThemeContext must be used within a ThemeContext.Provider!");
+    }
+    // theme === themes.light
+    // themes.light: {
+    //   backgroundColor: "AntiqueWhite",
+    //   textColor: "DarkSlateGrey",
+    //   buttonBackground: "Lavender", 
+    //   inputBackground: "Gainsboro"
+    // }
+
+    const buttonStyles = {
+      backgroundColor: theme.buttonBackground, 
+      color: theme.textColor
+    }
+
     let currentlyVisibleState = null;
     let buttonText = null; 
+
     if (this.state.editing ) {      
       currentlyVisibleState = <EditTicketForm ticket = {this.state.selectedTicket} onEditTicket = {this.handleEditingTicketInList} />
       buttonText = "Return to Ticket List";
@@ -86,12 +106,20 @@ class TicketControl extends React.Component {
     return (
       <React.Fragment>
         {currentlyVisibleState}
-        <button onClick={this.handleClick}>{buttonText}</button> 
+        <button style={buttonStyles} onClick={this.handleClick}>{buttonText}</button> 
       </React.Fragment>
     );
   }
-
 }
 
-export default TicketControl;
+TicketControl.contextType = ThemeContext;
+// this.context (TicketControl.context) will now equal whatever ThemeContext has provided as a value because TicketControl is wrapped in the provider tags.
+// <ThemeContext.Provider value={theme}>
+//  ...
+//  <TicketControl />
+// </ThemeContext.Provider> 
+// in the case above, this.context (TicketControl.context) will equal 'theme' because it was passed in to the provider as the value.
 
+// TicketControl.context === whatever value is in the ThemeContext.Provider
+
+export default TicketControl;
